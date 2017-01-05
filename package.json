@@ -1,0 +1,23 @@
+{
+  "name": "gyotc",
+  "version": "0.0.1",
+  "description": "an extension to redirect to web gyotaku when opened web site is 404.",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ymotongpoo/gyotc.git"
+  },
+  "keywords": [
+    "chrome", "gyotc"
+  ],
+  "author": "Yoshi Yamaguchi (ymotongpoo)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ymotongpoo/gyotc/issues"
+  },
+  "homepage": "https://github.com/ymotongpoo/gyotc#readme"
+}
