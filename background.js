@@ -12,18 +12,18 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
+chrome.browserAction.onClicked.addListener(function(tab){
+    chrome.tabs.update(tab.id, {url: "http://gyo.tc/" + tab.url});            
+});
+
 // Called when the user loads a page.
-chrome.webRequest.onCompleted.addListener(
-    function(details){
-        if ([404, 500, 503].indexOf(details.statusCode) >= 0) {
-            console.log(details.tabId, details.statusCode);
-            chrome.tabs.update(details.tabId, {url: "http://gyo.tc/" + details.url});
-        }
-        console.log(details);
-    },
-    {
-        urls: ["<all_urls>"],
-        types: ["main_frame"]
-    },
-    []
-);
+// chrome.webRequest.onCompleted.addListener(
+//     function(details){
+//         console.log(details);
+//     },
+//     {
+//         urls: ["<all_urls>"],
+//         types: ["main_frame"]
+//     },
+//     []
+// );

@@ -17,6 +17,7 @@
         "default_title": "gyotc"
     },  
     "permissions": [
+        "tabs",
         "webRequest",
         "webNavigation",
         "<all_urls>"
