@@ -17,7 +17,7 @@ chrome.webNavigation.onCommitted.addListener((details) => {
         console.log(details.tabId, details.url);
         const xhr = new XHR(details.tabId);
         const protocol = new URL(details.url).protocol;
-        if (["http:", "https:", "ftp:"].indexOf(protocol)) {
+        if (["http:", "https:", "ftp:"].indexOf(protocol) >= 0) {
             xhr.call(details.url);
         }
     }
