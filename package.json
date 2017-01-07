@@ -1,6 +1,6 @@
 {
   "name": "gyotc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "an extension to redirect to web gyotaku when opened web site is 404.",
   "main": "background.js",
   "scripts": {

@@ -12,18 +12,60 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-chrome.browserAction.onClicked.addListener(function(tab){
-    chrome.tabs.update(tab.id, {url: "http://gyo.tc/" + tab.url});            
+chrome.webNavigation.onCommitted.addListener((details) => {
+    if (["link", "typed", "start_page", "reload"].indexOf(details.transitionType) >= 0) {
+        console.log(details.tabId, details.url);
+        const xhr = new XHR(details.tabId);
+        const protocol = new URL(details.url).protocol;
+        if (["http:", "https:", "ftp:"].indexOf(protocol)) {
+            xhr.call(details.url);
+        }
+    }
 });
 
-// Called when the user loads a page.
-// chrome.webRequest.onCompleted.addListener(
-//     function(details){
-//         console.log(details);
-//     },
-//     {
-//         urls: ["<all_urls>"],
-//         types: ["main_frame"]
-//     },
-//     []
-// );
+class XHR {
+    constructor(tabId) {
+        this.tabId = tabId;
+        this.hasGyotc = false;
+    } 
+
+    /**
+     * call send XHR to the url.
+     * @param url target URL.
+     */
+    call(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = this.callback_.bind(this);
+        xhr.open("GET", url, true);
+        xhr.responseType = "document";
+        xhr.send();
+    }
+
+    /**
+     * _callback is callback function for call.
+     * @param ev XHR callback event.
+     */
+    callback_(ev) {
+        const resp = ev.target;
+        const doc = resp.responseXML;
+        const alertDom = doc.getElementsByClassName("alert alert-dismissible alert-info");
+        if (alertDom.length === 0) {
+            chrome.browserAction.setIcon({
+                "tabId": this.tabId,
+                "path": {
+                    "16": "img/active16.png",
+                    "24": "img/active24.png",
+                    "32": "img/active32.png",
+                    "64": "img/active64.png"
+                }
+            }, () => {
+                chrome.tabs.get(this.tabId, (tab) => {
+                    chrome.browserAction.onClicked.addListener((tab) => {
+                        chrome.tabs.update(tab.id, {url: "http://gyo.tc/" + tab.url});            
+                    });
+                });
+                this.hasGyotc = true;
+            });
+        }
+    }
+}
