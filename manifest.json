@@ -1,8 +1,8 @@
 {
     "name": "gyotc",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "manifest_version": 2,
-    "description": "an extension to redirect to web gyotaku when opened web site is 404.",
+    "description": "an extension to redirect to web gyotaku",
     "background": {
         "scripts": ["background.js"],
         "persistenet": false

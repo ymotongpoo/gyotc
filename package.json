@@ -1,7 +1,7 @@
 {
   "name": "gyotc",
-  "version": "0.0.2",
-  "description": "an extension to redirect to web gyotaku when opened web site is 404.",
+  "version": "0.0.3",
+  "description": "an extension to redirect to web gyotaku.",
   "main": "background.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
