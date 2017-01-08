@@ -18,7 +18,7 @@
  * @return {string} Corresponding gyotaku URL page to url.
  */
 function gyotcURL(url) {
-    return "https://gyo.tc/" + url;
+    return "http://gyo.tc/" + url;
 }
 
 chrome.webNavigation.onCommitted.addListener((details) => {
@@ -92,6 +92,21 @@ class XHR {
 
         const a = links.getElementsByTagName("a");
         if (a.length > 0) {
+            let results = Array.prototype.map.call(a, (elem, i, arr) => {
+                return {
+                    "date": elem.innerText,
+                    "url": elem.getAttribute("href")
+                }
+            });
+            
+            // TODO(ymotongpoo): add popup UI
+            // chrome.windows.create({
+            //     "url": "popup.html",
+            //     "type": "popup"
+            // }, (window) => {
+
+            // });
+
             chrome.browserAction.setIcon({
                 "tabId": this.tabId,
                 "path": activeIcons

@@ -2,6 +2,15 @@
     "name": "gyotc",
     "version": "0.0.3",
     "manifest_version": 2,
+
+    "icons": {
+        "16": "img/icon16.png",
+        "24": "img/icon24.png",
+        "32": "img/icon32.png",
+        "64": "img/icon64.png",
+        "128": "img/icon128.png"
+    },
+    "offline_enabled": false,
     "description": "an extension to redirect to web gyotaku",
     "background": {
         "scripts": ["background.js"],
@@ -9,13 +18,23 @@
     },
     "browser_action": {
         "default_icon": {
-            "16": "img/icon16.png",
-            "24": "img/icon24.png",
-            "32": "img/icon32.png",
-            "64": "img/icon64.png"
+            "16": "img/inactive16.png",
+            "24": "img/inactive24.png",
+            "32": "img/inactive32.png",
+            "64": "img/inactive64.png"
         },
         "default_title": "gyotc"
     },  
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "windows": "Ctrl+Y",
+                "mac": "Command+Y",
+                "chromeos": "Ctrl+Y",
+                "linux": "Ctrl+Y"
+            }
+        }
+    },
     "permissions": [
         "tabs",
         "webRequest",
