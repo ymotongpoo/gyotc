@@ -12,6 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
+
 /**
  * gyotcURL returns web gyotaku link of url page.
  * @param {string} url URL of target page.
@@ -31,6 +32,11 @@ chrome.webNavigation.onCommitted.addListener((details) => {
         }
     }
 });
+
+/**
+ * TODO(ymotongpoo): change to use gyotacku API
+ * eg) http://megalodon.jp/?type=json&url=http%3A%2F%2Fyahoo.co.jp%2F
+ */
 
 const activeIcons = {
     "16": "img/active16.png",
