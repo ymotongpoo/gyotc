@@ -18,9 +18,36 @@
  * @param {string} url URL of target page.
  * @return {string} Corresponding gyotaku URL page to url.
  */
-function gyotcURL(url) {
+function gyotcUrl(url) {
     return "http://gyo.tc/" + url;
 }
+
+/**
+ * gyotcApiUrl returns target URL for gyotc API request.
+ * The response from the API is as following structure:
+ * {[
+ *   {
+ *     "datetime": "YYYY-mm-dd HH:MM:SS",
+ *     "title": "<the title of target page>",
+ *     "url": "<gyotc URL>"
+ *   }, ...
+ * ]}
+ * @param {string} url request URL
+ * @return {string} gyo.tc target URL to get JSON.
+ */
+function gyotcApiUrl(url) {
+    const data = {
+        "type": "json",
+        "url": url
+    };
+
+    let params = [];
+    for (let key in data) {
+        params.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+    }
+    return "http://megalodon.jp/?" + params.join("&");
+}
+
 
 chrome.webNavigation.onCommitted.addListener((details) => {
     if (["link", "typed", "start_page", "reload"].indexOf(details.transitionType) >= 0) {
@@ -28,7 +55,7 @@ chrome.webNavigation.onCommitted.addListener((details) => {
         const xhr = new XHR(details.tabId);
         const protocol = new URL(details.url).protocol;
         if (["http:", "https:", "ftp:"].indexOf(protocol) >= 0) {
-            xhr.call(gyotcURL(details.url));
+            xhr.call(details.url);
         }
     }
 });
@@ -70,8 +97,9 @@ class XHR {
     call(url) {
         var xhr = new XMLHttpRequest();
         xhr.onload = this.callback_.bind(this);
-        xhr.open("GET", url, true);
-        xhr.responseType = "document";
+        gyotcApiUrl()
+        xhr.open("GET", gyotcApiUrl(url), true);
+        xhr.responseType = "json";
         xhr.send();
     }
 
@@ -81,10 +109,8 @@ class XHR {
      */
     callback_(ev) {
         const resp = ev.target;
-        const doc = resp.responseXML;
-        const links = doc.getElementsByClassName("col-xs-12 col-sm-12 col-md-12")[1];
-        console.log(links);
-        if (links === undefined) {
+        const ret = resp.response; // JSON result
+        if (ret.length === 0) {
             chrome.browserAction.setIcon({
                     "tabId": this.tabId,
                     "path": inactiveIcons
@@ -94,32 +120,14 @@ class XHR {
                 });
             });
             return;
-        }
-
-        const a = links.getElementsByTagName("a");
-        if (a.length > 0) {
-            let results = Array.prototype.map.call(a, (elem, i, arr) => {
-                return {
-                    "date": elem.innerText,
-                    "url": elem.getAttribute("href")
-                }
-            });
-            
-            // TODO(ymotongpoo): add popup UI
-            // chrome.windows.create({
-            //     "url": "popup.html",
-            //     "type": "popup"
-            // }, (window) => {
-
-            // });
-
+        } else {            
             chrome.browserAction.setIcon({
                 "tabId": this.tabId,
                 "path": activeIcons
             }, () => {
                 chrome.tabs.get(this.tabId, (tab) => {
                     chrome.browserAction.onClicked.addListener((tab) => {
-                        chrome.tabs.update(tab.id, {url: gyotcURL(tab.url)});            
+                        chrome.tabs.update(tab.id, {"url": ret[0].url});            
                     });
                 });
                 this.hasGyotc = true;
